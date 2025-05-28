@@ -3,20 +3,20 @@ import Icon from "../../../components/AppIcon";
 
 const TimeFilterSelector = ({ value, onChange, isLoading }) => {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   const options = [
-    { value: "7", label: "Last 7 days" },
-    { value: "30", label: "Last 30 days" },
-    { value: "90", label: "Last 90 days" }
+    { value: "7days", label: "Last 7 days" },
+    { value: "30days", label: "Last 30 days" },
+    { value: "90days", label: "Last 90 days" },
   ];
-  
+
   const handleSelect = (optionValue) => {
     onChange(optionValue);
     setIsOpen(false);
   };
-  
-  const selectedOption = options.find(option => option.value === value);
-  
+
+  const selectedOption = options.find((option) => option.value === value);
+
   return (
     <div className="relative">
       <button
@@ -37,13 +37,17 @@ const TimeFilterSelector = ({ value, onChange, isLoading }) => {
           </>
         )}
       </button>
-      
+
       {isOpen && (
         <div className="absolute z-10 mt-1 w-48 bg-white rounded-md shadow-lg border border-border animate-fade-in">
           {options.map((option) => (
             <button
               key={option.value}
-              className={`w-full text-left px-4 py-2 text-sm hover:bg-background ${option.value === value ? 'bg-blue-50 text-primary font-medium' : 'text-text-primary'}`}
+              className={`w-full text-left px-4 py-2 text-sm hover:bg-background ${
+                option.value === value
+                  ? "bg-blue-50 text-primary font-medium"
+                  : "text-text-primary"
+              }`}
               onClick={() => handleSelect(option.value)}
             >
               {option.label}

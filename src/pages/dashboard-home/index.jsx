@@ -10,7 +10,7 @@ import RecentActivity from "./components/RecentActivity";
 import { getDateRange } from "utils/dateUtils";
 
 const DashboardHome = () => {
-  const [timeFilter, setTimeFilter] = useState("30");
+  const [timeFilter, setTimeFilter] = useState("90days");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
@@ -20,9 +20,8 @@ const DashboardHome = () => {
       setIsLoading(true);
       setError(null);
 
-      const baseUrl = "http://localhost:8000";
-
-      const { startDate, endDate } = getDateRange(90);
+      const baseUrl = import.meta.env.VITE_BACKEND_API_BASE_URL;
+      const { startDate, endDate } = getDateRange("90days");
 
       // Dynamic/custom parameter keys
       const params = {
@@ -44,9 +43,9 @@ const DashboardHome = () => {
         const metrics = responseData.counts.slice(0, 3).map((item, index) => {
           return {
             id: index,
-            title: item.crime_type_name,
+            title: item.crime_type_name.split("(")[0],
             value: item.count,
-            change: 2.1,
+            change: -2.1,
             icon: "Home",
           };
         });
