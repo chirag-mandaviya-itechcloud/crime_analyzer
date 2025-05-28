@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import Header from "../../components/ui/Header";
 import Icon from "../../components/AppIcon";
@@ -6,6 +7,7 @@ import MapVisualization from "./components/MapVisualization";
 import MetricCards from "./components/MetricCards";
 import TimeFilterSelector from "./components/TimeFilterSelector";
 import RecentActivity from "./components/RecentActivity";
+import { getDateRange } from "utils/dateUtils";
 
 const DashboardHome = () => {
   const [timeFilter, setTimeFilter] = useState("30");
@@ -18,107 +20,169 @@ const DashboardHome = () => {
       setIsLoading(true);
       setError(null);
 
-      try {
-        // Simulate API call with timeout
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+      const baseUrl = "http://localhost:8000";
 
-        // Mock data based on selected time filter
-        const data = {
-          metrics: [
-            {
-              id: 1,
-              title: "Violent Crimes",
-              value:
-                timeFilter === "7" ? 127 : timeFilter === "30" ? 486 : 1254,
-              change:
-                timeFilter === "7" ? -3.2 : timeFilter === "30" ? 2.8 : 5.6,
-              icon: "AlertTriangle",
-            },
-            {
-              id: 2,
-              title: "Property Crimes",
-              value:
-                timeFilter === "7" ? 342 : timeFilter === "30" ? 1248 : 3567,
-              change:
-                timeFilter === "7" ? 1.5 : timeFilter === "30" ? -2.1 : -4.3,
-              icon: "Home",
-            },
-            {
-              id: 3,
-              title: "Public Disorder",
-              value: timeFilter === "7" ? 89 : timeFilter === "30" ? 376 : 982,
-              change:
-                timeFilter === "7" ? -5.7 : timeFilter === "30" ? -1.9 : 0.8,
-              icon: "Users",
-            },
-          ],
-          mapData: {
-            center: { lat: 34.0522, lng: -118.2437 },
-            hotspots: [
-              {
-                id: 1,
-                lat: 34.052,
-                lng: -118.243,
-                count: timeFilter === "7" ? 23 : timeFilter === "30" ? 87 : 214,
-                category: "Theft",
-              },
-              {
-                id: 2,
-                lat: 34.047,
-                lng: -118.251,
-                count: timeFilter === "7" ? 18 : timeFilter === "30" ? 65 : 176,
-                category: "Assault",
-              },
-              {
-                id: 3,
-                lat: 34.058,
-                lng: -118.235,
-                count: timeFilter === "7" ? 12 : timeFilter === "30" ? 43 : 118,
-                category: "Vandalism",
-              },
-              {
-                id: 4,
-                lat: 34.061,
-                lng: -118.248,
-                count: timeFilter === "7" ? 9 : timeFilter === "30" ? 38 : 97,
-                category: "Burglary",
-              },
-              {
-                id: 5,
-                lat: 34.043,
-                lng: -118.267,
-                count: timeFilter === "7" ? 15 : timeFilter === "30" ? 56 : 143,
-                category: "Robbery",
-              },
-            ],
-          },
-          recentActivity: [
-            {
-              id: 1,
+      const { startDate, endDate } = getDateRange(90);
+
+      // Dynamic/custom parameter keys
+      const params = {
+        reported_date_after: startDate, // e.g., "fromDate"
+        reported_date_before: endDate, // e.g., "toDate"
+      };
+
+      try {
+        // // Simulate API call with timeout
+        // await new Promise((resolve) => setTimeout(resolve, 1500));
+
+        const response = await axios.get(`${baseUrl}/get_crime_counts`, {
+          params,
+        });
+
+        const responseData = response.data.Data;
+        console.log(response.data.Data);
+
+        const metrics = responseData.counts.slice(0, 3).map((item, index) => {
+          return {
+            id: index,
+            title: item.crime_type_name,
+            value: item.count,
+            change: 2.1,
+            icon: "Home",
+          };
+        });
+
+        const centers = responseData.map_data.center;
+
+        const hotspots = responseData.map_data.hotspots
+          .slice(0, 3)
+          .map((item, index) => {
+            return {
+              id: index,
+              lat: item.latitude,
+              lng: item.longitude,
+              count: item.count,
+              category: "Crime",
+            };
+          });
+
+        const recentActivity = responseData.recent
+          .slice(0, 3)
+          .map((item, index) => {
+            return {
+              id: index,
               type: "incident",
-              title: "Multiple vehicle break-ins reported",
-              location: "Downtown area",
-              time: "2 hours ago",
-              category: "Property Crime",
-            },
-            {
-              id: 2,
-              type: "alert",
-              title: "Increased activity detected",
-              location: "North District",
-              time: "5 hours ago",
-              category: "Pattern Recognition",
-            },
-            {
-              id: 3,
-              type: "report",
-              title: "Weekly crime summary generated",
-              time: "Yesterday",
-              category: "System",
-            },
-          ],
+              title: item.crime_type_name,
+              location: item.location,
+              time: "recently",
+              category: item.premises_name,
+            };
+          });
+
+        const data = {
+          metrics: metrics,
+          mapData: {
+            center: centers,
+            hotspots: hotspots,
+          },
+          recentActivity: recentActivity,
         };
 
+        // Mock data based on selected time filter
+        // const data = {
+        //   metrics: [
+        //     {
+        //       id: 1,
+        //       title: "Violent Crimes",
+        //       value:
+        //         timeFilter === "7" ? 127 : timeFilter === "30" ? 486 : 1254,
+        //       change:
+        //         timeFilter === "7" ? -3.2 : timeFilter === "30" ? 2.8 : 5.6,
+        //       icon: "AlertTriangle",
+        //     },
+        //     {
+        //       id: 2,
+        //       title: "Property Crimes",
+        //       value:
+        //         timeFilter === "7" ? 342 : timeFilter === "30" ? 1248 : 3567,
+        //       change:
+        //         timeFilter === "7" ? 1.5 : timeFilter === "30" ? -2.1 : -4.3,
+        //       icon: "Home",
+        //     },
+        //     {
+        //       id: 3,
+        //       title: "Public Disorder",
+        //       value: timeFilter === "7" ? 89 : timeFilter === "30" ? 376 : 982,
+        //       change:
+        //         timeFilter === "7" ? -5.7 : timeFilter === "30" ? -1.9 : 0.8,
+        //       icon: "Users",
+        //     },
+        //   ],
+        //   mapData: {
+        //     center: { lat: 34.0522, lng: -118.2437 },
+        //     hotspots: [
+        //       {
+        //         id: 1,
+        //         lat: 34.052,
+        //         lng: -118.243,
+        //         count: timeFilter === "7" ? 23 : timeFilter === "30" ? 87 : 214,
+        //         category: "Theft",
+        //       },
+        //       {
+        //         id: 2,
+        //         lat: 34.047,
+        //         lng: -118.251,
+        //         count: timeFilter === "7" ? 18 : timeFilter === "30" ? 65 : 176,
+        //         category: "Assault",
+        //       },
+        //       {
+        //         id: 3,
+        //         lat: 34.058,
+        //         lng: -118.235,
+        //         count: timeFilter === "7" ? 12 : timeFilter === "30" ? 43 : 118,
+        //         category: "Vandalism",
+        //       },
+        //       {
+        //         id: 4,
+        //         lat: 34.061,
+        //         lng: -118.248,
+        //         count: timeFilter === "7" ? 9 : timeFilter === "30" ? 38 : 97,
+        //         category: "Burglary",
+        //       },
+        //       {
+        //         id: 5,
+        //         lat: 34.043,
+        //         lng: -118.267,
+        //         count: timeFilter === "7" ? 15 : timeFilter === "30" ? 56 : 143,
+        //         category: "Robbery",
+        //       },
+        //     ],
+        //   },
+        //   recentActivity: [
+        //     {
+        //       id: 1,
+        //       type: "incident",
+        //       title: "Multiple vehicle break-ins reported",
+        //       location: "Downtown area",
+        //       time: "2 hours ago",
+        //       category: "Property Crime",
+        //     },
+        //     {
+        //       id: 2,
+        //       type: "alert",
+        //       title: "Increased activity detected",
+        //       location: "North District",
+        //       time: "5 hours ago",
+        //       category: "Pattern Recognition",
+        //     },
+        //     {
+        //       id: 3,
+        //       type: "report",
+        //       title: "Weekly crime summary generated",
+        //       time: "Yesterday",
+        //       category: "System",
+        //     },
+        //   ],
+        // };
         setDashboardData(data);
       } catch (err) {
         console.error("Error fetching dashboard data:", err);
@@ -132,6 +196,7 @@ const DashboardHome = () => {
   }, [timeFilter]);
 
   const handleTimeFilterChange = (value) => {
+    console.log(value);
     setTimeFilter(value);
   };
 
