@@ -1,18 +1,21 @@
 import React, { useState } from "react";
-import Icon from "../../../components/AppIcon";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+});
 
 const MapVisualization = ({ center, hotspots }) => {
   const [selectedHotspot, setSelectedHotspot] = useState(null);
-  
-  const handleHotspotClick = (hotspot) => {
-    setSelectedHotspot(hotspot);
-  };
-  
-  const closeTooltip = () => {
-    setSelectedHotspot(null);
-  };
-  
-  // Calculate intensity color based on count
+
   const getIntensityColor = (count) => {
     if (count > 150) return "bg-red-500";
     if (count > 100) return "bg-red-400";
@@ -23,103 +26,102 @@ const MapVisualization = ({ center, hotspots }) => {
 
   return (
     <div className="relative w-full h-full">
-      <iframe
-        width="100%"
-        height="100%"
-        loading="lazy"
-        title="Crime Hotspot Map"
-        referrerPolicy="no-referrer-when-downgrade"
-        src={`https://www.google.com/maps?q=${center.lat},${center.lng}&z=14&output=embed`}
-        className="border-0"
-      ></iframe>
-      
-      {/* Overlay hotspots on the map */}
-      <div className="absolute inset-0 pointer-events-none">
+      <MapContainer
+        center={[center.lat, center.lng]}
+        zoom={14}
+        className="w-full h-full z-0"
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution="&copy; OpenStreetMap contributors"
+        />
+
         {hotspots.map((hotspot) => (
-          <div 
+          <Marker
             key={hotspot.id}
-            className="absolute transform -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
-            style={{ 
-              left: `${Math.random() * 80 + 10}%`, 
-              top: `${Math.random() * 80 + 10}%` 
+            position={[hotspot.lat, hotspot.lng]}
+            eventHandlers={{
+              click: () => setSelectedHotspot(hotspot),
             }}
-            onClick={() => handleHotspotClick(hotspot)}
-          >
-            <div className={`${getIntensityColor(hotspot.count)} w-5 h-5 rounded-full flex items-center justify-center cursor-pointer relative`}>
-              <div className={`${getIntensityColor(hotspot.count)} w-10 h-10 rounded-full absolute animate-ping opacity-30`}></div>
-            </div>
-          </div>
+            icon={L.divIcon({
+              className: "",
+              html: `
+                <div class='relative w-5 h-5 ${getIntensityColor(
+                  hotspot.count
+                )} rounded-full flex items-center justify-center'>
+                  <div class='absolute w-10 h-10 ${getIntensityColor(
+                    hotspot.count
+                  )} rounded-full animate-ping opacity-30'></div>
+                </div>
+              `,
+              iconSize: [20, 20],
+              iconAnchor: [10, 10], // Center of 20x20 div
+            })}
+          />
         ))}
-      </div>
-      
-      {/* Tooltip for selected hotspot */}
+      </MapContainer>
+
+      {/* Tooltip */}
       {selectedHotspot && (
-        <div 
-          className="absolute bg-white rounded-lg shadow-lg border border-border p-3 z-10 w-64"
-          style={{ 
-            left: `${Math.random() * 60 + 20}%`, 
-            top: `${Math.random() * 60 + 20}%` 
-          }}
+        <div
+          className="absolute bg-white rounded-lg shadow-lg border border-gray-200 p-3 z-10 w-64 animate-fade-in"
+          style={{ left: "50%", top: "20%", transform: "translate(-50%, 0)" }}
         >
           <div className="flex justify-between items-start mb-2">
-            <h3 className="font-medium text-text-primary">{selectedHotspot.category} Hotspot</h3>
-            <button 
-              onClick={closeTooltip}
-              className="text-text-tertiary hover:text-text-secondary"
+            <h3 className="font-medium text-gray-900">
+              {selectedHotspot.category} Hotspot
+            </h3>
+            <button
+              onClick={() => setSelectedHotspot(null)}
+              className="text-gray-400 hover:text-gray-600"
             >
-              <Icon name="X" size={16} />
+              ✕
             </button>
           </div>
-          
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-text-secondary">Incidents:</span>
-              <span className="font-medium text-text-primary">{selectedHotspot.count}</span>
+              <span className="text-gray-500">Incidents:</span>
+              <span className="font-medium text-gray-800">
+                {selectedHotspot.count}
+              </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-text-secondary">Category:</span>
-              <span className="font-medium text-text-primary">{selectedHotspot.category}</span>
+              <span className="text-gray-500">Category:</span>
+              <span className="font-medium text-gray-800">
+                {selectedHotspot.category}
+              </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-text-secondary">Coordinates:</span>
-              <span className="font-medium text-text-primary">
-                {selectedHotspot.lat.toFixed(3)}, {selectedHotspot.lng.toFixed(3)}
+              <span className="text-gray-500">Coordinates:</span>
+              <span className="font-medium text-gray-800">
+                {selectedHotspot.lat.toFixed(3)},{" "}
+                {selectedHotspot.lng.toFixed(3)}
               </span>
             </div>
           </div>
-          
-          <button className="mt-3 text-xs text-primary hover:text-primary-dark font-medium flex items-center">
-            <Icon name="ExternalLink" size={12} className="mr-1" />
-            View detailed analysis
+          <button className="mt-3 text-xs text-blue-600 hover:text-blue-800 font-medium">
+            🔗 View detailed analysis
           </button>
         </div>
       )}
-      
-      {/* Map controls */}
-      <div className="absolute bottom-4 right-4 flex flex-col space-y-2">
-        <button className="bg-white rounded-full p-2 shadow-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary">
-          <Icon name="Plus" size={18} />
-        </button>
-        <button className="bg-white rounded-full p-2 shadow-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary">
-          <Icon name="Minus" size={18} />
-        </button>
-      </div>
-      
+
       {/* Map legend */}
-      <div className="absolute bottom-4 left-4 bg-white p-3 rounded-lg shadow-md border border-border">
-        <h4 className="text-xs font-medium text-text-primary mb-2">Incident Density</h4>
+      <div className="absolute bottom-4 left-4 bg-white p-3 rounded-lg shadow-md border border-gray-200 animate-slide-up">
+        <h4 className="text-xs font-medium text-gray-900 mb-2">
+          Incident Density
+        </h4>
         <div className="space-y-1.5">
           <div className="flex items-center">
             <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
-            <span className="text-xs text-text-secondary">High (150+)</span>
+            <span className="text-xs text-gray-600">High (150+)</span>
           </div>
           <div className="flex items-center">
             <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
-            <span className="text-xs text-text-secondary">Medium (50-150)</span>
+            <span className="text-xs text-gray-600">Medium (50-150)</span>
           </div>
           <div className="flex items-center">
             <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
-            <span className="text-xs text-text-secondary">Low (&lt;50)</span>
+            <span className="text-xs text-gray-600">Low (&lt;50)</span>
           </div>
         </div>
       </div>

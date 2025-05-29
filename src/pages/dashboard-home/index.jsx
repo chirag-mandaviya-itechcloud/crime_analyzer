@@ -53,7 +53,7 @@ const DashboardHome = () => {
         const centers = responseData.map_data.center;
 
         const hotspots = responseData.map_data.hotspots
-          .slice(0, 3)
+          // .slice(0, 3)
           .map((item, index) => {
             return {
               id: index,
