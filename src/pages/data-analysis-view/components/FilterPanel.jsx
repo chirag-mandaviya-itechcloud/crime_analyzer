@@ -7,17 +7,23 @@ const FilterPanel = ({ filters, onFilterChange }) => {
     { value: "theft", label: "Theft" },
     { value: "assault", label: "Assault" },
     { value: "fraud", label: "Fraud" },
+    { value: "vehicle", label: "Vehicle" },
+    { value: "violence", label: "Violence" },
+    { value: "sexual", label: "Sexual" },
+    { value: "child", label: "Child" },
+    { value: "threats", label: "Threats" },
     { value: "vandalism", label: "Vandalism" },
     { value: "drug_offenses", label: "Drug Offenses" },
     { value: "burglary", label: "Burglary" },
+    { value: "other", label: "Other" },
   ];
 
   const dataSources = [
     { value: "all", label: "All Sources" },
-    { value: "social_media", label: "Social Media" },
-    { value: "news", label: "News Articles" },
-    { value: "community", label: "Community Reports" },
-    { value: "police", label: "Police Records" },
+    { value: "Social Media", label: "Social Media" },
+    { value: "News", label: "News Articles" },
+    { value: "Community", label: "Community Reports" },
+    { value: "Police", label: "Police Records" },
   ];
 
   const dateRanges = [
@@ -45,7 +51,7 @@ const FilterPanel = ({ filters, onFilterChange }) => {
     onFilterChange({
       crimeType: "all",
       dataSource: "all",
-      dateRange: "30days",
+      dateRange: "90days",
     });
   };
 
@@ -64,7 +70,10 @@ const FilterPanel = ({ filters, onFilterChange }) => {
 
       <div className="space-y-4">
         <div>
-          <label htmlFor="crimeType" className="block text-sm font-medium text-text-secondary mb-1">
+          <label
+            htmlFor="crimeType"
+            className="block text-sm font-medium text-text-secondary mb-1"
+          >
             Crime Type
           </label>
           <select
@@ -82,7 +91,10 @@ const FilterPanel = ({ filters, onFilterChange }) => {
         </div>
 
         <div>
-          <label htmlFor="dataSource" className="block text-sm font-medium text-text-secondary mb-1">
+          <label
+            htmlFor="dataSource"
+            className="block text-sm font-medium text-text-secondary mb-1"
+          >
             Data Source
           </label>
           <select
@@ -100,7 +112,10 @@ const FilterPanel = ({ filters, onFilterChange }) => {
         </div>
 
         <div>
-          <label htmlFor="dateRange" className="block text-sm font-medium text-text-secondary mb-1">
+          <label
+            htmlFor="dateRange"
+            className="block text-sm font-medium text-text-secondary mb-1"
+          >
             Date Range
           </label>
           <select
@@ -120,7 +135,10 @@ const FilterPanel = ({ filters, onFilterChange }) => {
         {filters.dateRange === "custom" && (
           <div className="space-y-3 pt-2">
             <div>
-              <label htmlFor="startDate" className="block text-sm font-medium text-text-secondary mb-1">
+              <label
+                htmlFor="startDate"
+                className="block text-sm font-medium text-text-secondary mb-1"
+              >
                 Start Date
               </label>
               <input
@@ -130,24 +148,19 @@ const FilterPanel = ({ filters, onFilterChange }) => {
               />
             </div>
             <div>
-              <label htmlFor="endDate" className="block text-sm font-medium text-text-secondary mb-1">
+              <label
+                htmlFor="endDate"
+                className="block text-sm font-medium text-text-secondary mb-1"
+              >
                 End Date
               </label>
-              <input
-                type="date"
-                id="endDate"
-                className="input-field text-sm"
-              />
+              <input type="date" id="endDate" className="input-field text-sm" />
             </div>
           </div>
         )}
 
         <div className="pt-4">
-          <button
-            className="w-full btn btn-primary py-2"
-          >
-            Apply Filters
-          </button>
+          <button className="w-full btn btn-primary py-2">Apply Filters</button>
         </div>
       </div>
     </div>

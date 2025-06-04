@@ -56,6 +56,8 @@ const DataAnalysisView = () => {
       const params = {
         reported_date_after: startDate, // e.g., "fromDate"
         reported_date_before: endDate, // e.g., "toDate"
+        crime_type_name: filters.crimeType,
+        source: filters.dataSource,
       };
       try {
         // Simulate API call
@@ -82,7 +84,7 @@ const DataAnalysisView = () => {
           (item, index) => {
             return {
               id: index,
-              category: item.crime_type_name,
+              category: item.crime_type_name.split("(")[0],
               count: item.count,
             };
           }
