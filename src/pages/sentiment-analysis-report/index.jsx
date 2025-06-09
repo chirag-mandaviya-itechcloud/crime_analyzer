@@ -121,6 +121,92 @@ const SentimentAnalysisReport = () => {
           },
           timeline: timelineData,
           topics: topics,
+          // topics: [
+          //   {
+          //     weight: 46,
+          //     sentiment: 0.041,
+          //     name: "Theft",
+          //     id: 1,
+          //   },
+          //   {
+          //     weight: 11,
+          //     sentiment: -0.039,
+          //     name: "Public Safety",
+          //     id: 2,
+          //   },
+          //   {
+          //     weight: 11,
+          //     sentiment: 0.083,
+          //     name: "Drug Activity",
+          //     id: 3,
+          //   },
+          //   {
+          //     weight: 107,
+          //     sentiment: 0.033,
+          //     name: "Noise Complaints",
+          //     id: 4,
+          //   },
+          //   {
+          //     weight: 259,
+          //     sentiment: 0.117,
+          //     name: "Community Outreach",
+          //     id: 5,
+          //   },
+          //   {
+          //     weight: 18,
+          //     sentiment: 0.191,
+          //     name: "Community Events",
+          //     id: 6,
+          //   },
+          //   {
+          //     weight: 14,
+          //     sentiment: 0.092,
+          //     name: "Youth Programs",
+          //     id: 7,
+          //   },
+          //   {
+          //     weight: 18,
+          //     sentiment: 0.113,
+          //     name: "Police Response",
+          //     id: 8,
+          //   },
+          //   {
+          //     weight: 6,
+          //     sentiment: 0.211,
+          //     name: "Homelessness",
+          //     id: 9,
+          //   },
+          //   {
+          //     weight: 4,
+          //     sentiment: -0.019,
+          //     name: "Emergency Services",
+          //     id: 10,
+          //   },
+          //   {
+          //     weight: 1,
+          //     sentiment: 0.0,
+          //     name: "Street Lighting",
+          //     id: 11,
+          //   },
+          //   {
+          //     weight: 1,
+          //     sentiment: 0.0,
+          //     name: "Property Crime",
+          //     id: 12,
+          //   },
+          //   {
+          //     weight: 1,
+          //     sentiment: 0.35,
+          //     name: "Traffic Violations",
+          //     id: 13,
+          //   },
+          //   {
+          //     weight: 4,
+          //     sentiment: 0.0,
+          //     name: "School Safety",
+          //     id: 14,
+          //   },
+          // ],
           sources: {
             social: {
               twitter: { positive: 40, neutral: 30, negative: 30 },
@@ -164,7 +250,8 @@ const SentimentAnalysisReport = () => {
     };
 
     fetchData();
-  }, [dateRange, selectedSource, selectedTopic]);
+  }, [dateRange]);
+  //  selectedSource, selectedTopic
 
   const handleDateRangeChange = (newRange) => {
     setDateRange(newRange);

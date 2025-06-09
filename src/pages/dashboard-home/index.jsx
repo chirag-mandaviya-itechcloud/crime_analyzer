@@ -60,7 +60,7 @@ const DashboardHome = () => {
               lat: item.latitude,
               lng: item.longitude,
               count: item.count,
-              category: "Crime",
+              category: "Crime Hotspot",
             };
           });
 
@@ -87,101 +87,101 @@ const DashboardHome = () => {
         };
 
         // Mock data based on selected time filter
-        // const data = {
-        //   metrics: [
-        //     {
-        //       id: 1,
-        //       title: "Violent Crimes",
-        //       value:
-        //         timeFilter === "7" ? 127 : timeFilter === "30" ? 486 : 1254,
-        //       change:
-        //         timeFilter === "7" ? -3.2 : timeFilter === "30" ? 2.8 : 5.6,
-        //       icon: "AlertTriangle",
-        //     },
-        //     {
-        //       id: 2,
-        //       title: "Property Crimes",
-        //       value:
-        //         timeFilter === "7" ? 342 : timeFilter === "30" ? 1248 : 3567,
-        //       change:
-        //         timeFilter === "7" ? 1.5 : timeFilter === "30" ? -2.1 : -4.3,
-        //       icon: "Home",
-        //     },
-        //     {
-        //       id: 3,
-        //       title: "Public Disorder",
-        //       value: timeFilter === "7" ? 89 : timeFilter === "30" ? 376 : 982,
-        //       change:
-        //         timeFilter === "7" ? -5.7 : timeFilter === "30" ? -1.9 : 0.8,
-        //       icon: "Users",
-        //     },
-        //   ],
-        //   mapData: {
-        //     center: { lat: 34.0522, lng: -118.2437 },
-        //     hotspots: [
-        //       {
-        //         id: 1,
-        //         lat: 34.052,
-        //         lng: -118.243,
-        //         count: timeFilter === "7" ? 23 : timeFilter === "30" ? 87 : 214,
-        //         category: "Theft",
-        //       },
-        //       {
-        //         id: 2,
-        //         lat: 34.047,
-        //         lng: -118.251,
-        //         count: timeFilter === "7" ? 18 : timeFilter === "30" ? 65 : 176,
-        //         category: "Assault",
-        //       },
-        //       {
-        //         id: 3,
-        //         lat: 34.058,
-        //         lng: -118.235,
-        //         count: timeFilter === "7" ? 12 : timeFilter === "30" ? 43 : 118,
-        //         category: "Vandalism",
-        //       },
-        //       {
-        //         id: 4,
-        //         lat: 34.061,
-        //         lng: -118.248,
-        //         count: timeFilter === "7" ? 9 : timeFilter === "30" ? 38 : 97,
-        //         category: "Burglary",
-        //       },
-        //       {
-        //         id: 5,
-        //         lat: 34.043,
-        //         lng: -118.267,
-        //         count: timeFilter === "7" ? 15 : timeFilter === "30" ? 56 : 143,
-        //         category: "Robbery",
-        //       },
-        //     ],
-        //   },
-        //   recentActivity: [
-        //     {
-        //       id: 1,
-        //       type: "incident",
-        //       title: "Multiple vehicle break-ins reported",
-        //       location: "Downtown area",
-        //       time: "2 hours ago",
-        //       category: "Property Crime",
-        //     },
-        //     {
-        //       id: 2,
-        //       type: "alert",
-        //       title: "Increased activity detected",
-        //       location: "North District",
-        //       time: "5 hours ago",
-        //       category: "Pattern Recognition",
-        //     },
-        //     {
-        //       id: 3,
-        //       type: "report",
-        //       title: "Weekly crime summary generated",
-        //       time: "Yesterday",
-        //       category: "System",
-        //     },
-        //   ],
-        // };
+        const mockData = {
+          metrics: [
+            {
+              id: 1,
+              title: "Violent Crimes",
+              value:
+                timeFilter === "7" ? 127 : timeFilter === "30" ? 486 : 1254,
+              change:
+                timeFilter === "7" ? -3.2 : timeFilter === "30" ? 2.8 : 5.6,
+              icon: "AlertTriangle",
+            },
+            {
+              id: 2,
+              title: "Property Crimes",
+              value:
+                timeFilter === "7" ? 342 : timeFilter === "30" ? 1248 : 3567,
+              change:
+                timeFilter === "7" ? 1.5 : timeFilter === "30" ? -2.1 : -4.3,
+              icon: "Home",
+            },
+            {
+              id: 3,
+              title: "Public Disorder",
+              value: timeFilter === "7" ? 89 : timeFilter === "30" ? 376 : 982,
+              change:
+                timeFilter === "7" ? -5.7 : timeFilter === "30" ? -1.9 : 0.8,
+              icon: "Users",
+            },
+          ],
+          mapData: {
+            center: { lat: 34.0522, lng: -118.2437 },
+            hotspots: [
+              {
+                id: 1,
+                lat: 34.052,
+                lng: -118.243,
+                count: timeFilter === "7" ? 23 : timeFilter === "30" ? 87 : 214,
+                category: "Theft",
+              },
+              {
+                id: 2,
+                lat: 34.047,
+                lng: -118.251,
+                count: timeFilter === "7" ? 18 : timeFilter === "30" ? 65 : 176,
+                category: "Assault",
+              },
+              {
+                id: 3,
+                lat: 34.058,
+                lng: -118.235,
+                count: timeFilter === "7" ? 12 : timeFilter === "30" ? 43 : 118,
+                category: "Vandalism",
+              },
+              {
+                id: 4,
+                lat: 34.061,
+                lng: -118.248,
+                count: timeFilter === "7" ? 9 : timeFilter === "30" ? 38 : 97,
+                category: "Burglary",
+              },
+              {
+                id: 5,
+                lat: 34.043,
+                lng: -118.267,
+                count: timeFilter === "7" ? 15 : timeFilter === "30" ? 56 : 143,
+                category: "Robbery",
+              },
+            ],
+          },
+          recentActivity: [
+            {
+              id: 1,
+              type: "incident",
+              title: "Multiple vehicle break-ins reported",
+              location: "Downtown area",
+              time: "2 hours ago",
+              category: "Property Crime",
+            },
+            {
+              id: 2,
+              type: "alert",
+              title: "Increased activity detected",
+              location: "North District",
+              time: "5 hours ago",
+              category: "Pattern Recognition",
+            },
+            {
+              id: 3,
+              type: "report",
+              title: "Weekly crime summary generated",
+              time: "Yesterday",
+              category: "System",
+            },
+          ],
+        };
         setDashboardData(data);
       } catch (err) {
         console.error("Error fetching dashboard data:", err);
